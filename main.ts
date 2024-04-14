@@ -1,60 +1,46 @@
 #! /usr/bin/env node
 
-import inquirer from "inquirer";
-let todos : string[] = ["bilal", "hammad"];
+import inquirer from 'inquirer'
+const currency: any = {
+    USD: 1,
+    EUR: 0.91,
+    GBP: 0.76,
+    INR: 74.57,
+    PKR: 280
+};
 
-
-async function createTodo(todos:string[]){
-    do{ let ans = await inquirer.prompt({
-        type: "list",
-        message: "Select an operation",
-        name: "select",
-        choices:["Add", "Update", "View", "Delete"],
-    })
-
-    if (ans.select == "Add"){
-        let addTodo = await inquirer.prompt({
-            type: "input",
-            message: "Add items in the list",
-            name: "todo",
-        });
-        todos.push(addTodo.todo);
-        todos.forEach(todo => console.log(todo));
-    }
-
-    if (ans.select == "Update"){
-        let updateTodo = await inquirer.prompt({
+let userAns = await inquirer.prompt( 
+   [
+        {
+            name: "from",
+            message: "Enter from Currency",
             type: "list",
-            message: "Update items in the list",
-            name: "todo",
-            choices: todos.map(item => item)
-        });
-        let addTodo = await inquirer.prompt({
-            type: "input",
-            message: "Add items in the list",
-            name: "todo",
-        });
-        let newTodo = todos.filter(val =>val !== updateTodo.todo)
-        todos = [...newTodo,addTodo.todo];
-        console.log(todos);
-    }
-    if (ans.select == "View"){
-        console.log("*** To Do List ***");
-        console.log(todos);
-        console.log("***********************");
-    }    
-    if (ans.select == "Delete"){
-        let deleteTodo = await inquirer.prompt({
+            choices:['USD', 'EUR', 'GBP', 'INR', 'PKR'],
+        },
+        {
+            name: "to",
+            message: "Enter from Currency",
             type: "list",
-            message: "Update items in the list",
-            name: "todo",
-            choices: todos.map(item => item)
-        });
-        let newTodo = todos.filter(val =>val !== deleteTodo.todo)
-        todos = [...newTodo];
-        console.log(todos);
-    }
+            choices:['USD', 'EUR', 'GBP', 'INR', 'PKR'],
+        },
+        {
+            name: "amount",
+            message: "Enter Your Amount",
+            type: "number",
+        }
+   ]
+        
+)
 
-    } while (true)
-    }
-    createTodo(todos);    
+let fromAmount = currency[userAns.from]
+let toAmount = currency[userAns.to]
+let amount = userAns.amount
+let baseAmount = amount / fromAmount  //USD base currency
+let convertedAmount = baseAmount * toAmount
+console.log(convertedAmount);
+
+//console.log(fromAmount);
+//console.log(toAmount);
+//console.log(amount);
+
+
